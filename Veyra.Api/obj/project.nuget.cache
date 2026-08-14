@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "dgSpecHash": "kH30RTbbTUc=",
+  "success": true,
+  "projectFilePath": "/workspaces/veyra/Veyra.Api/Veyra.Api.csproj",
+  "expectedPackageFiles": [
+    "/home/codespace/.nuget/packages/microsoft.aspnetcore.openapi/10.0.4/microsoft.aspnetcore.openapi.10.0.4.nupkg.sha512",
+    "/home/codespace/.nuget/packages/microsoft.openapi/2.0.0/microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "message": "Package 'Microsoft.OpenApi' 2.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
+      "projectPath": "/workspaces/veyra/Veyra.Api/Veyra.Api.csproj",
+      "warningLevel": 1,
+      "filePath": "/workspaces/veyra/Veyra.Api/Veyra.Api.csproj",
+      "libraryId": "Microsoft.OpenApi",
+      "targetGraphs": [
+        "net10.0"
+      ]
+    }
+  ]
+}
