@@ -2,18 +2,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Veyra.Api.Presentation.Dto.Request;
 
-public record CreateUserRequest
+public record LoginRequest
 {
     [Required]
-    [StringLength(120, MinimumLength = 2)]
-    public required string Name { get; init; }
-
-    [Required]
     [EmailAddress]
-    [StringLength(180)]
     public required string Email { get; init; }
 
     [Required]
-    [StringLength(100, MinimumLength = 8)]
     public required string Password { get; init; }
 }

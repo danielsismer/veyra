@@ -1,6 +1,84 @@
-@Veyra.Api_HostAddress = http://localhost:5217
+@host = http://localhost:5217
 
-GET {{Veyra.Api_HostAddress}}/weatherforecast/
+### 1. Status (publico)
+GET {{host}}/status
 Accept: application/json
 
-###
+### 2. Cadastro (publico) -> 201, sempre com role CLIENT
+# @name register
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Daniel",
+  "email": "daniel@veyra.local",
+  "password": "senha@12345"
+}
+
+### 3. Login (publico) -> 200 com accessToken + refreshToken
+# @name login
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "daniel@veyra.local",
+  "password": "senha@12345"
+}
+
+### 4. Sem token -> 401
+GET {{host}}/api/users
+Accept: application/json
+
+### 5. Com token -> 200
+GET {{host}}/api/users
+Accept: application/json
+Authorization: Bearer {{login.response.body.accessToken}}
+
+### 6. Perfil do token atual
+GET {{host}}/api/auth/me
+Accept: application/json
+Authorization: Bearer {{login.response.body.accessToken}}
+
+### 7. Delete com token de CLIENT -> 403
+DELETE {{host}}/api/users/1
+Authorization: Bearer {{login.response.body.accessToken}}
+
+### 8. Login do admin semeado (Development)
+# @name adminLogin
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@veyra.local",
+  "password": "admin@12345"
+}
+
+### 9. Delete com token de ADMIN -> 204
+DELETE {{host}}/api/users/2
+Authorization: Bearer {{adminLogin.response.body.accessToken}}
+
+### 10. Refresh -> 200, devolve um par novo e invalida o refresh usado
+# @name refresh
+POST {{host}}/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{login.response.body.refreshToken}}"
+}
+
+### 11. Reuso do refresh antigo -> 401 e derruba a sessao inteira
+POST {{host}}/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{login.response.body.refreshToken}}"
+}
+
+### 12. Logout -> 204; refresh posterior devolve 401
+POST {{host}}/api/auth/logout
+Content-Type: application/json
+Authorization: Bearer {{refresh.response.body.accessToken}}
+
+{
+  "refreshToken": "{{refresh.response.body.refreshToken}}"
+}

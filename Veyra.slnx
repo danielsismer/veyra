@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Veyra.Api/Veyra.Api.csproj" />
+  <Project Path="Veyra.Api.Tests/Veyra.Api.Tests.csproj" />
+</Solution>

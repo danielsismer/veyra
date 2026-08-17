@@ -1,46 +1,33 @@
-using Veyra.Api.Domain.Entities;
-using Veyra.Api.Presentation.Dto.Request;
-using Veyra.Api.Presentation.Dto.Response;
 using Veyra.Api.Application.Mapper;
+using Veyra.Api.Domain.Repository;
+using Veyra.Api.Presentation.Dto.Response;
 
 namespace Veyra.Api.Application.Service;
 
 public class UserService
 {
-    private  List<User> _users = new();
-    private readonly UserMapper _mapper = new();
+    private readonly IUserRepository _users;
+    private readonly UserMapper _mapper;
 
-    public UserService(UserMapper mapper, List<User> users)
+    public UserService(IUserRepository users, UserMapper mapper)
     {
-        _mapper = mapper;
         _users = users;
+        _mapper = mapper;
     }
 
-    public UserResponse Create(CreateUserRequest request)
+    public List<UserResponse> FindAll()
     {
-
-        var user = _mapper.ToEntity(request);
-        _users.Add(user);
-
-        return _mapper.ToResponse(user);
-    }
-
-    public List<UserResponse>? FindAll()
-    {
-        return _users.Select(_mapper.ToResponse).ToList();
+        return _users.FindAll().Select(_mapper.ToResponse).ToList();
     }
 
     public UserResponse? FindById(int id)
     {
-        var user = _users.FirstOrDefault(u => u.Id == id);
+        var user = _users.FindById(id);
         return user is null ? null : _mapper.ToResponse(user);
     }
 
-    public void DeleteById(int id)
+    public bool DeleteById(int id)
     {
-        var user = _users.FirstOrDefault(u => u.Id == id);
-
+        return _users.Remove(id);
     }
-
-
 }

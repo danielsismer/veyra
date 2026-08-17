@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Veyra.Api.Presentation.Dto.Request;
 using Veyra.Api.Application.Service;
+using Veyra.Api.Presentation.Dto.Response;
 
 namespace Veyra.Api.Presentation.Controller;
 
@@ -16,35 +16,31 @@ public class UserController : ControllerBase
         _service = service;
     }
 
-    [HttpPost]
-    [AllowAnonymous]
-    public IActionResult Create(CreateUserRequest request)
-    {
-        var user = _service.Create(request);
-        return Ok(user);
-    }
-
     [HttpGet]
     [Authorize]
+    [ProducesResponseType<List<UserResponse>>(StatusCodes.Status200OK)]
     public IActionResult FindAll()
     {
         var users = _service.FindAll();
         return Ok(users);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:int}")]
     [Authorize]
+    [ProducesResponseType<UserResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult FindById(int id)
     {
         var user = _service.FindById(id);
-        return Ok(user);
+        return user is null ? NotFound() : Ok(user);
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     [Authorize(Roles = "ADMIN")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public IActionResult DeleteById(int id)
     {
-        _service.DeleteById(id);
-        return NoContent();
+        return _service.DeleteById(id) ? NoContent() : NotFound();
     }
 }
