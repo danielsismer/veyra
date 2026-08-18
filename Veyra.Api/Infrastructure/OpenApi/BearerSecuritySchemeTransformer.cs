@@ -4,10 +4,6 @@ using Microsoft.OpenApi;
 
 namespace Veyra.Api.Infrastructure.OpenApi;
 
-/// <summary>
-/// Declara o esquema "Bearer" no documento OpenAPI, para o Scalar/Swagger UI oferecerem
-/// o campo de token.
-/// </summary>
 public sealed class BearerSecuritySchemeTransformer : IOpenApiDocumentTransformer
 {
     private readonly IAuthenticationSchemeProvider _schemeProvider;

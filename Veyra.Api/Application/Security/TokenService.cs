@@ -8,7 +8,6 @@ namespace Veyra.Api.Application.Security;
 
 public class TokenService
 {
-    /// <summary>256 bits de entropia: o refresh token e um segredo opaco, nao um JWT.</summary>
     private const int RefreshTokenBytes = 32;
 
     private readonly JwtSettings _settings;
@@ -32,8 +31,6 @@ public class TokenService
             IssuedAt = now.UtcDateTime,
             NotBefore = now.UtcDateTime,
             Expires = now.AddMinutes(_settings.AccessTokenMinutes).UtcDateTime,
-            // Dicionario em vez de ClaimsIdentity: garante que "sub" e "role" cheguem ao
-            // payload exatamente com esses nomes, sem o remapeamento para URIs WS-*.
             Claims = new Dictionary<string, object>
             {
                 [JwtRegisteredClaimNames.Sub] = user.Id.ToString(),

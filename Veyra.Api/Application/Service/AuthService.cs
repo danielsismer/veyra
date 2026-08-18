@@ -18,10 +18,6 @@ public class AuthService
     private readonly IPasswordHasher<User> _passwordHasher;
     private readonly ILogger<AuthService> _logger;
 
-    /// <summary>
-    /// Usuario descartavel usado so para gastar o mesmo tempo de verificacao quando o e-mail
-    /// nao existe, evitando enumeracao de contas por diferenca de latencia.
-    /// </summary>
     private readonly User _decoyUser;
     private readonly string _decoyHash;
 
@@ -56,7 +52,6 @@ public class AuthService
         return AuthResult<UserResponse>.Ok(_mapper.ToResponse(user));
     }
 
-    /// <summary>Cria um usuario com a role informada. Usado pelo seed de desenvolvimento.</summary>
     public User CreateUser(CreateUserRequest request, UserEnum role)
     {
         var user = _mapper.ToEntity(request, passwordHash: string.Empty, role);
@@ -71,7 +66,6 @@ public class AuthService
 
         if (user is null)
         {
-            // Gasta o mesmo trabalho de PBKDF2 do caminho feliz antes de recusar.
             _passwordHasher.VerifyHashedPassword(_decoyUser, _decoyHash, request.Password);
             return AuthResult<AuthResponse>.Fail(AuthError.InvalidCredentials);
         }
@@ -91,10 +85,6 @@ public class AuthService
         return AuthResult<AuthResponse>.Ok(IssueTokens(user));
     }
 
-    /// <summary>
-    /// Rotaciona o refresh token. Reapresentar um token ja revogado e tratado como
-    /// comprometimento: toda a familia de tokens do usuario cai junto.
-    /// </summary>
     public AuthResult<AuthResponse> Refresh(string refreshToken)
     {
         var stored = _refreshTokens.Find(refreshToken);
@@ -104,7 +94,6 @@ public class AuthService
             return AuthResult<AuthResponse>.Fail(AuthError.InvalidRefreshToken);
         }
 
-        // Expiracao natural nao e sinal de ataque, entao nao derruba a familia de tokens.
         if (stored.IsExpired)
         {
             return AuthResult<AuthResponse>.Fail(AuthError.InvalidRefreshToken);
@@ -114,7 +103,6 @@ public class AuthService
 
         if (user is null)
         {
-            // Usuario removido enquanto a sessao estava aberta.
             _refreshTokens.RevokeAllForUser(stored.UserId);
             return AuthResult<AuthResponse>.Fail(AuthError.InvalidRefreshToken);
         }
@@ -123,8 +111,6 @@ public class AuthService
 
         if (!stored.TryRevoke(replacedByToken: rotated.Token))
         {
-            // O token ja tinha sido consumido (rotacionado ou deslogado): alguem esta
-            // reapresentando um token velho. Trata a familia inteira como comprometida.
             var revoked = _refreshTokens.RevokeAllForUser(stored.UserId);
             _logger.LogWarning(
                 "Reuso de refresh token detectado para o usuario {UserId}. {Revoked} token(s) ativo(s) revogado(s).",
@@ -138,10 +124,6 @@ public class AuthService
         return AuthResult<AuthResponse>.Ok(BuildResponse(user, rotated));
     }
 
-    /// <summary>
-    /// Revoga o refresh token apresentado, desde que pertenca ao usuario autenticado.
-    /// Nao informa se o token existia, para nao virar um oraculo de tokens validos.
-    /// </summary>
     public void Logout(int userId, string refreshToken)
     {
         var stored = _refreshTokens.Find(refreshToken);

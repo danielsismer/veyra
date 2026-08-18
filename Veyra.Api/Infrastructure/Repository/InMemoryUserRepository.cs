@@ -4,10 +4,6 @@ using Veyra.Api.Domain.Repository;
 
 namespace Veyra.Api.Infrastructure.Repository;
 
-/// <summary>
-/// Store em memoria registrado como singleton. Trocar por EF Core significa apenas
-/// escrever outra implementacao de <see cref="IUserRepository"/>.
-/// </summary>
 public class InMemoryUserRepository : IUserRepository
 {
     private readonly ConcurrentDictionary<int, User> _users = new();

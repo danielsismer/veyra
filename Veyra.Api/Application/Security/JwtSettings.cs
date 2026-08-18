@@ -6,7 +6,6 @@ public class JwtSettings
 {
     public const string SectionName = "Jwt";
 
-    /// <summary>HMAC-SHA256 exige no minimo 256 bits de chave.</summary>
     public const int MinimumKeyBytes = 32;
 
     public string Issuer { get; set; } = string.Empty;
@@ -17,10 +16,6 @@ public class JwtSettings
 
     public byte[] KeyBytes => Encoding.UTF8.GetBytes(Key);
 
-    /// <summary>
-    /// Falha na subida da aplicacao em vez de aceitar requests com uma configuracao
-    /// que so quebraria (ou pior, assinaria fraco) na primeira emissao de token.
-    /// </summary>
     public bool Validate(out string error)
     {
         if (string.IsNullOrWhiteSpace(Issuer))

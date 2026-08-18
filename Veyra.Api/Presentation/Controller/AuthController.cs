@@ -93,9 +93,6 @@ public class AuthController : ControllerBase
         return user is null ? NotFound() : Ok(user);
     }
 
-    /// <summary>
-    /// O pipeline so chega aqui com um token validado, entao a claim "sub" existe e e numerica.
-    /// </summary>
     private int CurrentUserId =>
         int.Parse(User.FindFirstValue(ClaimNames.Subject) ?? User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 }

@@ -10,6 +10,5 @@ public interface IRefreshTokenRepository
 
     IReadOnlyList<RefreshToken> FindByUser(int userId);
 
-    /// <summary>Revoga todos os tokens ainda ativos do usuario. Retorna quantos foram revogados.</summary>
     int RevokeAllForUser(int userId);
 }

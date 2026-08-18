@@ -5,10 +5,6 @@ using Veyra.Api.Presentation.Dto.Request;
 
 namespace Veyra.Api.Infrastructure.Seed;
 
-/// <summary>
-/// Cria um administrador em Development. Sem ele nao ha como exercitar os endpoints
-/// [Authorize(Roles = "ADMIN")]: o cadastro publico so gera Client e o store e volatil.
-/// </summary>
 public static class DevelopmentSeeder
 {
     public static void SeedAdmin(IServiceProvider services, IConfiguration configuration, ILogger logger)

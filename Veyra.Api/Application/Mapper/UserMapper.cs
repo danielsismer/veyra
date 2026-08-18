@@ -7,10 +7,6 @@ namespace Veyra.Api.Application.Mapper;
 
 public class UserMapper
 {
-    /// <summary>
-    /// O hash chega pronto: o mapper nao conhece o algoritmo, e a senha em claro
-    /// nunca passa por aqui.
-    /// </summary>
     public User ToEntity(CreateUserRequest request, string passwordHash, UserEnum role = UserEnum.Client)
     {
         return new User(

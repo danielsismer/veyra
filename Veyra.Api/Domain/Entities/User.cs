@@ -18,13 +18,9 @@ public class User
     public string PasswordHash { private set; get; }
     public UserEnum Role { private set; get; }
 
-    /// <summary>Atribuido pelo repositorio no momento da persistencia.</summary>
+    public string RoleName => Role.ToString().ToUpperInvariant();
+
     public void AssignId(int id) => Id = id;
 
     public void ChangePasswordHash(string passwordHash) => PasswordHash = passwordHash;
-
-    /// <summary>
-    /// Nome da role como aparece na claim e nos atributos [Authorize(Roles = "...")].
-    /// </summary>
-    public string RoleName => Role.ToString().ToUpperInvariant();
 }

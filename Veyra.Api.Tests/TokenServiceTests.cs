@@ -38,10 +38,6 @@ public class TokenServiceTests
         Assert.True(claims.ContainsKey(JwtRegisteredClaimNames.Jti));
     }
 
-    /// <summary>
-    /// [Authorize(Roles = "ADMIN")] compara o VALOR da claim com Ordinal, ou seja,
-    /// diferencia maiusculas. Se este teste quebrar, admins levam 403 em silencio.
-    /// </summary>
     [Fact]
     public void Role_vai_para_a_claim_em_maiusculo_batendo_com_o_atributo_Authorize()
     {

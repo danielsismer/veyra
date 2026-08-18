@@ -10,9 +10,6 @@ using Veyra.Api.Presentation.Dto.Request;
 
 namespace Veyra.Api.Tests;
 
-/// <summary>
-/// Monta AuthService sobre os repositorios em memoria, sem host HTTP.
-/// </summary>
 internal sealed class AuthTestContext
 {
     public AuthTestContext(int accessTokenMinutes = 15, int refreshTokenDays = 7)

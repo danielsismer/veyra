@@ -4,10 +4,6 @@ using Microsoft.OpenApi;
 
 namespace Veyra.Api.Infrastructure.OpenApi;
 
-/// <summary>
-/// Marca como protegidas apenas as operacoes que nao tem [AllowAnonymous], para que
-/// /login, /register e /refresh nao aparecam pedindo token no documento.
-/// </summary>
 public sealed class AuthOperationTransformer : IOpenApiOperationTransformer
 {
     public Task TransformAsync(

@@ -31,7 +31,6 @@ public class AuthServiceTests
         ctx.Auth.Register(AuthTestContext.Request("a@veyra.local"));
         ctx.Auth.Register(AuthTestContext.Request("b@veyra.local"));
 
-        // Salt por senha: hashes iguais denunciariam ausencia de salt.
         Assert.NotEqual(
             ctx.Users.FindByEmail("a@veyra.local")!.PasswordHash,
             ctx.Users.FindByEmail("b@veyra.local")!.PasswordHash);
@@ -90,7 +89,6 @@ public class AuthServiceTests
 
         var login = ctx.Auth.Login(new LoginRequest { Email = email, Password = senha });
 
-        // Senha errada e e-mail inexistente sao indistinguiveis: nao da para enumerar contas.
         Assert.False(login.Succeeded);
         Assert.Equal(AuthError.InvalidCredentials, login.Error);
     }

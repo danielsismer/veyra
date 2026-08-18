@@ -35,13 +35,11 @@ public class RefreshTokenRotationTests
 
         var rotacionado = ctx.Auth.Refresh(login.RefreshToken).Value!;
 
-        // O atacante reapresenta o token que a vitima ja trocou.
         var reuso = ctx.Auth.Refresh(login.RefreshToken);
 
         Assert.False(reuso.Succeeded);
         Assert.Equal(AuthError.InvalidRefreshToken, reuso.Error);
 
-        // O token legitimo da vitima tambem cai: a familia e considerada comprometida.
         Assert.True(ctx.RefreshTokens.Find(rotacionado.RefreshToken)!.IsRevoked);
         Assert.False(ctx.Auth.Refresh(rotacionado.RefreshToken).Succeeded);
     }
@@ -64,7 +62,6 @@ public class RefreshTokenRotationTests
         var login = Login(ctx);
         var usuario = ctx.Users.FindByEmail("user@veyra.local")!;
 
-        // Token ja nascido vencido, convivendo com o token valido da sessao.
         var vencido = new RefreshToken(
             token: "token-vencido",
             userId: usuario.Id,
@@ -75,7 +72,6 @@ public class RefreshTokenRotationTests
         var resultado = ctx.Auth.Refresh("token-vencido");
 
         Assert.False(resultado.Succeeded);
-        // Expiracao e comportamento normal de cliente, nao sinal de ataque.
         Assert.True(ctx.RefreshTokens.Find(login.RefreshToken)!.IsActive);
     }
 
@@ -112,7 +108,6 @@ public class RefreshTokenRotationTests
         var resultados = new bool[16];
         Parallel.For(0, resultados.Length, i => resultados[i] = ctx.Auth.Refresh(login.RefreshToken).Succeeded);
 
-        // O compare-and-set garante que so uma das chamadas consome o token.
         Assert.Equal(1, resultados.Count(sucesso => sucesso));
     }
 
